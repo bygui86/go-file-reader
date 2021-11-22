@@ -1,0 +1,8 @@
+.*
+kube/
+Dockerfile
+LICENSE
+Makefile
+
+*.md
+go-file-reader
