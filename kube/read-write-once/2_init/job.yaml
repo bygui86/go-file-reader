@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init-data-go-file-reader
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      # restartPolicy: OnFailure
+      restartPolicy: Never
+      containers:
+        - name: ubuntu
+          image: ubuntu:22.04
+          imagePullPolicy: IfNotPresent
+          command: [sh, -c]
+          args: ["
+            echo -n 'volume content' > /bin/data/source.txt && 
+            echo '\n' && 
+            ls -lah /bin/data && 
+            echo '\n' && 
+            cat /bin/data/source.txt
+          "]
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          volumeMounts:
+            - name: data
+              mountPath: /bin/data/
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: data-go-file-reader
